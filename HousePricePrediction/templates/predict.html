@@ -1,0 +1,556 @@
+{% load static %}
+
+{% block extra_css %}
+<style>
+  /* ===== Base Styles ===== */
+  :root {
+    --primary: #66bb6a;        /* Soft Green */
+    --primary-dark: #4caf50;   /* Leafy Green */
+    --secondary: #81c784;      /* Light Mint */
+    --accent: #a5d6a7;         /* Pale Green */
+    --success: #43a047;        /* Deep Emerald */
+    --light: #f5fef7;          /* Very light green tint */
+    --dark: #1b1f1d;           /* Charcoal */
+    --gray: #6b6b6b;
+    --light-gray: #e0e0e0;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--light);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+@media (min-width: 768px) {
+  .main-grid {
+    display: flex;
+    justify-content: center;
+  }
+
+  .main-grid > .animate-in {
+    max-width: 700px;
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .card {
+    max-width: 650px;
+  }
+}
+
+ .card {
+  max-width: 600px; /* Increase from default ~400px if used */
+  margin: 0 auto; /* Center the form */
+  padding: 2.5rem; /* Add more breathing room */
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  border-top: 4px solid var(--primary);
+}
+
+
+  .card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-header h1 {
+    color: var(--primary);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-header p {
+    color: var(--gray);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-col {
+    flex: 1;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: #ffffff;
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.25);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    width: 100%;
+  }
+
+  .btn:hover {
+    background-color: var(--primary-dark);
+    background-image: linear-gradient(to right, var(--primary-dark), var(--secondary));
+  }
+
+  .result-card {
+    text-align: center;
+    padding: 2.5rem 2rem;
+  }
+
+  .price-display {
+    color: var(--primary);
+    text-shadow: 0 2px 4px rgba(102, 187, 106, 0.2);
+  }
+
+  .address-section {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background-color: var(--light);
+    border-radius: var(--border-radius);
+  }
+
+  .address-section h3 {
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  .address-text {
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--success);
+    color: white;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+
+  .map-link:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+  }
+
+  .similar-listings {
+    margin-top: 1rem;
+  }
+
+  .similar-listings h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .listing {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+  }
+
+  .listing:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .listing-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-address {
+    font-weight: 500;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-details {
+    display: flex;
+    gap: 1rem;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .listing-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .price-display {
+      font-size: 2rem;
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background-color: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    margin-top: 1.5rem;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 187, 106, 0.15);
+  }
+
+  .btn-secondary svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 576px) {
+    .action-buttons {
+      flex-direction: row;
+    }
+
+    .btn-secondary {
+      margin-top: 0;
+    }
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="main-grid">
+    <!-- Prediction Form Column -->
+    <div class="animate-in">
+      <div class="card">
+        <div class="form-header">
+          <h1>House Price Predictor</h1>
+          <p>Enter property details to get an accurate price estimation</p>
+        </div>
+        
+        <form id="predict-form" action="{% url 'result' %}" method="get" onsubmit="return validateForm();">
+          {% csrf_token %}
+          
+          <div class="form-row animate-in delay-1">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="income">Area Income(per year)</label>
+                <input type="number" id="income" name="n1" class="input-field" 
+                       value="{{ inputs.0|default:'' }}" placeholder="1,00,000" min="75000" required>
+                       <small class="form-text text-muted">Minimum: NPR 75,000</small>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="age">Avg. House Age</label>
+                <input type="number" id="age" name="n2" class="input-field" 
+                       value="{{ inputs.1|default:'' }}" placeholder="5" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row animate-in delay-1">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="rooms">Number of Rooms</label>
+                <input type="number" id="rooms" name="n3" class="input-field" 
+                       value="{{ inputs.2|default:'' }}" placeholder="7" required>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="bedrooms">Number of Bedrooms</label>
+                <input type="number" id="bedrooms" name="n4" class="input-field" 
+                       value="{{ inputs.3|default:'' }}" placeholder="3" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group animate-in delay-2">
+            <label for="population">Area Population</label>
+            <input type="number" id="population" name="n5" class="input-field" 
+                   value="{{ inputs.4|default:'' }}" placeholder="3,000" required>
+          </div>
+          
+          <!-- Add after Area Population input -->
+          <div class="form-row animate-in delay-2">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="buildup">Build-up Area</label>
+                <input type="number" id="buildup" name="n6" class="input-field"
+                       value="{{ inputs.5|default:'' }}" placeholder="1200" required>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="landarea">Land Area</label>
+                <input type="number" id="landarea" name="n7" class="input-field"
+                       value="{{ inputs.6|default:'' }}" placeholder="2000" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group animate-in delay-2">
+            <label for="floor">Floor</label>
+            <input type="number" id="floor" name="n8" class="input-field"
+                   value="{{ inputs.7|default:'' }}" placeholder="1" required step="1" min="1">
+          </div>
+          
+          <button type="submit" class="btn animate-in delay-2">Predict Price</button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Results Column -->
+    <div>
+      {% if result %}
+      <div class="card result-card animate-in">
+        <h2>Predicted Price</h2>
+        <div class="price-display">{{ result }}</div>
+        
+        {% if address %}
+        <div class="address-section">
+          <h3>Closest Match Address</h3>
+          <p class="address-text">{{ address }}</p>
+          <div class="action-buttons">
+            <a href="https://www.google.com/maps/search/{{ address|urlencode }}" 
+               target="_blank" class="map-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              View on Google Maps
+            </a>
+            <a href="{% url 'listings' %}" class="btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+              </svg>
+              Back to Listings
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+      
+      {% if similar_predictions %}
+      <div class="card animate-in delay-1">
+        <div class="similar-listings">
+          <h2>Similar Listings</h2>
+          
+          {% for item in similar_predictions %}
+          <div class="listing">
+            <div class="listing-price">{{ item.price }}</div>
+            <div class="listing-address">{{ item.address }}</div>
+            <div class="listing-details">
+              <span class="listing-detail">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                {{ item.bedrooms }} beds
+              </span>
+              <span class="listing-detail">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <path d="M2 10h20M7 15h1m4 0h1m4 0h1"></path>
+                </svg>
+                {{ item.rooms }} rooms
+              </span>
+              <span class="listing-detail">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                {{ item.population }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+ function validateForm() {
+  const inputs = [
+    document.getElementById('income'),
+    document.getElementById('age'),
+    document.getElementById('rooms'),
+    document.getElementById('bedrooms'),
+    document.getElementById('population'),
+    document.getElementById('buildup'),
+    document.getElementById('landarea'),
+    document.getElementById('floor')
+  ];
+
+  const fieldNames = [
+    "Area Income",
+    "Avg. House Age",
+    "Number of Rooms",
+    "Number of Bedrooms",
+    "Area Population",
+    "Build-up Area",
+    "Land Area",
+    "Floor"
+  ];
+
+  const minValues = [
+    75000,  // Minimum for Area Income
+    0,      // No minimum for other fields
+    0,
+    0,
+    0,
+    0,
+    0,
+    1       // Minimum for Floor
+  ];
+
+  for (let i = 0; i < inputs.length; i++) {
+    const value = inputs[i].value.trim();
+    const numericValue = parseFloat(value);
+    
+    if (value === '') {
+      alert(`Please enter a value for ${fieldNames[i]}.`);
+      inputs[i].focus();
+      return false;
+    }
+    
+    if (isNaN(numericValue)) {
+      alert(`Please enter a valid number for ${fieldNames[i]}.`);
+      inputs[i].focus();
+      return false;
+    }
+    
+    if (numericValue <= 0) {
+      alert(`Please enter a positive number for ${fieldNames[i]}.`);
+      inputs[i].focus();
+      return false;
+    }
+    
+    if (numericValue < minValues[i]) {
+      alert(`${fieldNames[i]} must be at least ${minValues[i].toLocaleString()}.`);
+      inputs[i].focus();
+      return false;
+    }
+    
+    if (fieldNames[i] === "Floor" && !Number.isInteger(numericValue)) {
+      alert("Floor must be an integer.");
+      inputs[i].focus();
+      return false;
+    }
+  }
+  return true;
+}
+</script>
+{% endblock %}

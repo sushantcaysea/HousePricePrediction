@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">📅 Visit Management Dashboard</h2>
+    
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Status Filter Tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'pending' %}active{% endif %}" 
+               href="?status=pending">Pending Approval</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'upcoming' %}active{% endif %}" 
+               href="?status=upcoming">Upcoming Visits</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'completed' %}active{% endif %}" 
+               href="?status=completed">Completed Visits</a>
+        </li>
+    </ul>
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>👤 User</th>
+                    <th>🏠 Property</th>
+                    <th>📆 Date</th>
+                    <th>⏰ Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visit in visits %}
+                <tr>
+                    <td>
+                        {{ visit.user.username }}
+                        <small class="d-block text-muted">{{ visit.user.email }}</small>
+                    </td>
+                    <td>
+                        <a href="{% url 'house_detail' visit.house.id %}" class="text-decoration-none fw-semibold">
+                            {{ visit.house.title }}
+                        </a>
+                    </td>
+                    <td>{{ visit.visit_date }}</td>
+                    <td>{{ visit.visit_time|default:"Not specified" }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if visit.status == 'approved' %}bg-success
+                            {% elif visit.status == 'rejected' %}bg-danger
+                            {% elif visit.status == 'pending' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ visit.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if visit.status == 'pending' %}
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'approve_visit' visit.id %}" class="btn btn-success">
+                                Approve
+                            </a>
+                            <a href="{% url 'reject_visit' visit.id %}" class="btn btn-danger">
+                                Reject
+                            </a>
+                        </div>
+                        {% else %}
+                        <span class="text-muted">Action completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No visits found matching your criteria.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    });
+</script>
+{% endblock %}

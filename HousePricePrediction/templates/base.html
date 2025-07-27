@@ -1,0 +1,793 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}House Price Prediction{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Only the navbar and footer styles from your original code */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 20px;
+            color: #2c3e50 !important;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand:hover {
+            color:#4fc3a1 !important;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn i {
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #4fc3a1;
+            border-color: #4fc3a1;
+        }
+
+        .btn-primary:hover {
+            background-color: #4fc3a1;
+            border-color: #4fc3a1;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .house-icon {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: #4fc3a1;
+            background-color: rgba(0, 168, 255, 0.1);
+        }
+
+        .nav-link.active {
+            color: #4fc3a1;
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-login, .btn-logout {
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-login {
+            background-color: #4fc3a1;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background-color: #4fc3a1;
+        }
+
+        .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background-color: #c0392b;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem 2rem;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .auth-buttons {
+                display: none;
+                position: absolute;
+                top: 70px;
+                right: 2rem;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                border-radius: 6px;
+            }
+            
+            .auth-buttons.active {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #222;
+            color: #ccc;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .footer-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+            padding: 0 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #4CAF50;
+            height: 2px;
+            box-sizing: border-box;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            background: #4CAF50;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #4CAF50;
+            padding-left: 5px;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .social-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #4CAF50;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 30px;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 13px;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .footer-col {
+                flex: 100%;
+                margin-bottom: 30px;
+            }
+            
+            .footer-row {
+                gap: 20px;
+            }
+            
+            .social-icons {
+                justify-content: flex-start;
+            }
+        }
+
+        /* Main content area styling (basic) */
+        .content {
+            margin-top: 80px; /* To account for fixed navbar */
+            padding: 20px;
+        }
+        /* Add to your existing style section */
+.modal-open-fix {
+    position: fixed;
+    width: 100%;
+    padding-right: 0 !important;
+}
+  html {
+            overflow-y: scroll;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+            padding-right: var(--scrollbar-width) !important;
+        }
+        
+        .modal {
+            padding-right: var(--scrollbar-width) !important;
+        }
+       
+               .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.7rem;
+            background-color: #dc3545;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .notification-dropdown {
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 0;
+        }
+        
+        .notification-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .notification-item.unread {
+            background-color: #f8f9fa;
+            font-weight: 500;
+        }
+        
+        .notification-item:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .notification-message {
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .notification-empty {
+            padding: 15px;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .notification-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mark-all-read {
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #dc3545;
+        }
+        /* Custom Bootstrap Alert Styling */
+.alert {
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideFade 0.6s ease forwards;
+  margin-bottom: 16px;
+}
+
+/* Success Alert */
+.alert-success {
+  background-color: #e6f9ec;
+  color: #207a4c;
+}
+
+/* Warning Alert */
+.alert-warning {
+  background-color: #fff7db;
+  color: #856404;
+}
+
+/* Danger (Error) Alert */
+.alert-danger {
+  background-color: #fdecea;
+  color: #b02a37;
+}
+
+/* Info Alert */
+.alert-info {
+  background-color: #e7f4fa;
+  color: #055160;
+}
+
+/* Close Button Customization */
+.alert .btn-close {
+  font-size: 1.2rem;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.alert .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Slide & Fade Animation */
+@keyframes slideFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: container for fixed top-right stack if you ever need */
+.alert-container-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1100;
+  max-width: 400px;
+}
+
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <span class="house-icon">🏠</span>
+            <span class="brand-name">House Price Predictor</span>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{% url 'about' %}" class="nav-link"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{% url 'contact' %}" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="{% url 'listings' %}" class="nav-link"><i class="fas fa-store"></i> Market</a></li>
+        </ul>
+        
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <!-- Notification Dropdown -->
+                <div class="dropdown me-3">
+                    <button class="btn btn-light position-relative" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        {% with unread_count=user.notifications.unread.count %}
+                            {% if unread_count > 0 %}
+                                <span class="notification-badge">{{ unread_count }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationDropdown">
+                        <li class="notification-header">
+                            <span>Notifications</span>
+                            <form method="post" action="{% url 'clear_notifications' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="mark-all-read">Clear All</button>
+                            </form>
+                        </li>
+                        {% for notification in request.user.notifications.all|slice:":5" %}
+                            <li>
+                                <div class="dropdown-item notification-item {% if not notification.is_read %}unread{% endif %}" 
+                                     data-notification-id="{{ notification.id }}"
+                                     data-notification-url="{% url 'mark_notification_read' notification.id %}"
+                                     {% if notification.link %}data-redirect-url="{{ notification.link }}"{% endif %}>
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-time">
+                                        <i class="far fa-clock me-1"></i>{{ notification.created_at|timesince }} ago
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="notification-empty">No notifications</li>
+                        {% endfor %}
+                        <li class="text-center py-2 border-top">
+                            <a href="{% url 'notifications' %}" class="text-primary">View All Notifications</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <a href="{% url 'logout' %}" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            {% endif %}
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Block -->
+<div class="content">
+    {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+    {% block content %}
+    <!-- Content will be inserted here by child templates -->
+    {% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-row">
+            <!-- About Section -->
+            <div class="footer-col">
+                <h4>About</h4>
+                <p>
+                    House Price Predictor is a web app to estimate real estate values using advanced ML model Linear Regression.
+                </p>
+            </div>
+            
+            <!-- Quick Links Section -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'listings' %}#predict-form">Predict</a></li>                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'listings' %}">Market</a></li>
+                </ul>
+            </div>
+            
+            <!-- Connect Section -->
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 House Price Predictor. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Store CSRF token for AJAX requests
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const authButtons = document.querySelector('.auth-buttons');
+        const menuIcon = mobileMenuBtn.querySelector('i');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            authButtons.classList.toggle('active');
+            menuIcon.classList.toggle('fa-bars');
+            menuIcon.classList.toggle('fa-times');
+        });
+
+        // Close menu when clicking on links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+                authButtons.classList.remove('active');
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
+
+        // Notification handling
+        function updateNotificationBadge() {
+            fetch('{% url "check_notifications" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.notification-badge');
+                    if (data.unread_count > 0) {
+                        if (!badge) {
+                            const newBadge = document.createElement('span');
+                            newBadge.className = 'notification-badge';
+                            document.querySelector('#notificationDropdown').appendChild(newBadge);
+                        }
+                        document.querySelector('.notification-badge').textContent = data.unread_count;
+                    } else if (badge) {
+                        badge.remove();
+                    }
+                });
+        }
+
+        // Handle "Clear All" button click
+        const clearButton = document.querySelector('.mark-all-read');
+        if (clearButton) {
+            clearButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                fetch("{% url 'clear_notifications' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Clear the notifications dropdown
+                        const dropdown = document.querySelector('.notification-dropdown');
+                        
+                        // Remove all notification items except header and footer
+                        const items = dropdown.querySelectorAll('.notification-item, .notification-empty');
+                        items.forEach(item => item.remove());
+                        
+                        // Add empty message
+                        const emptyItem = document.createElement('li');
+                        emptyItem.className = 'notification-empty';
+                        emptyItem.textContent = 'No notifications';
+                        dropdown.insertBefore(emptyItem, dropdown.querySelector('.border-top'));
+                        
+                        // Remove the badge
+                        const badge = document.querySelector('.notification-badge');
+                        if (badge) badge.remove();
+                        
+                        // Show success message
+                        const messagesContainer = document.createElement('div');
+                        messagesContainer.className = 'alert alert-success alert-dismissible fade show';
+                        messagesContainer.innerHTML = `
+                            <span>All notifications cleared successfully</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        
+                        const content = document.querySelector('.content');
+                        if (content) {
+                            content.prepend(messagesContainer);
+                            setTimeout(() => {
+                                const bsAlert = new bootstrap.Alert(messagesContainer);
+                                bsAlert.close();
+                            }, 3000);
+                        }
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

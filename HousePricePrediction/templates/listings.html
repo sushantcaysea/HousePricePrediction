@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f7fa;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 2rem;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+.listings-page body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f7fa;
+    }
+
+    .listings-page .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    .listing-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-text {
+        color: #7f8c8d;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text strong {
+        color: #2c3e50;
+    }
+
+    .cta-section {
+        background: white;
+        border-radius: 10px;
+        padding: 3rem;
+        margin: 3rem 0;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .cta-section h3 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .cta-section .lead {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border: none;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+
+    .modal-img {
+        max-height: 400px;
+        object-fit: contain;
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .cta-section {
+            padding: 2rem 1rem;
+        }
+        .modal-img {
+            max-height: 250px;
+        }
+    }
+
+/* Prevent scrollbar-related shifting - MUST ADD THESE RULES */
+html {
+    overflow-y: scroll; /* Force permanent scrollbar */
+}
+
+body {
+    padding-right: 0 !important; /* Reset any existing padding */
+    overflow-x: hidden; /* Prevent horizontal shifting */
+}
+
+.modal-open {
+    overflow: hidden; /* Lock body scroll when modal open */
+    padding-right: 0 !important;
+}
+
+/* Smooth modal transitions */
+.modal {
+    overflow-y: auto; /* Allow scrolling in modal */
+    padding-right: 0 !important;
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+}
+
+/* Enhanced Buttons */
+.btn-outline-primary.btn-sm {
+    border: 2px solid #5cb85c; /* soft green */
+    color: #207a4c; /* bold green for better readability */
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    text-transform: capitalize;
+}
+
+.btn-outline-primary.btn-sm:hover,
+.btn-outline-primary.btn-sm:focus {
+    background-color: #5cb85c;
+    color: white;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); /* optional soft glow */
+    text-decoration: none;
+    outline: none;
+}
+
+.btn.btn-link.btn-sm {
+    color: #2e7d32; /* Highlight green text */
+    font-weight: 500;
+    padding: 8px 10px;
+    text-decoration: underline;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+}
+
+.btn.btn-link.btn-sm:hover {
+    color: #4fc3a1 /* Darker green on hover for contrast */
+    text-decoration: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  {% if messages %}
+    <div class="mb-4">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+    <h2 class="text-center mb-4">🏠 Available Houses for Sale</h2>
+    <div class="row">
+        {% for house in listings %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <a href="{% url 'house_detail' house.id %}" class="text-decoration-none">
+                    {% if house.image %}
+                    <img src="{{ house.image.url }}" class="card-img-top listing-image"
+                         alt="{{ house.title }}"
+                         data-bs-toggle="modal"
+                         data-bs-target="#houseModal{{ house.id }}">
+                    {% else %}
+                    <img src="{% static 'images/default.jpg' %}" class="card-img-top listing-image" alt="No image">
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ house.title }}</h5>
+                    <p class="card-text">
+                        {% if house.location %}<strong>Location:</strong> {{ house.location }}<br>{% endif %}
+                        <strong>Price:</strong> Npr {{ house.price|intcomma }}<br>
+                        {% if house.bedrooms %}<strong>Bedrooms:</strong> {{ house.bedrooms }}{% endif %}
+                    </p>
+                    {% if house.description %}
+                    <p class="card-text text-muted">{{ house.description|truncatechars:100 }}</p>
+                    {% endif %}
+                    
+                    <div class="mt-auto pt-3">
+                        <a href="{% url 'house_detail' house.id %}" class="btn btn-outline-primary btn-sm">
+                            View Full Details
+                        </a>
+                        <button class="btn btn-link btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#houseModal{{ house.id }}">
+                            Quick Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modals for quick preview (simplified version) -->
+    {% for house in listings %}
+    <div class="modal fade" id="houseModal{{ house.id }}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="houseModalLabel{{ house.id }}">{{ house.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% if house.image %}
+                    <img src="{{ house.image.url }}" class="modal-img mb-3" alt="{{ house.title }}">
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group mb-3">
+                                {% if house.location %}
+                                <li class="list-group-item"><strong>📍 Location:</strong> {{ house.location }}</li>
+                                {% endif %}
+                                <li class="list-group-item"><strong>💰 Price:</strong> Npr {{ house.price|intcomma }}</li>
+                                {% if house.bedrooms %}
+                                <li class="list-group-item"><strong>🛏️ Bedrooms:</strong> {{ house.bedrooms }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group mb-3">
+                                {% if house.area %}
+                                <li class="list-group-item"><strong>📐 Area:</strong> {{ house.area }} sq. ft.</li>
+                                {% endif %}
+                                {% if house.house_age %}
+                                <li class="list-group-item"><strong>🏠 House Age:</strong> {{ house.house_age }} years</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'house_detail' house.id %}" class="btn btn-primary">
+                            View Complete Details & Schedule Visit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="cta-section">
+        <h3 class="mb-3">🔍 Want to find houses according to your choice?</h3>
+        <p class="lead mb-4">Use our smart price predictor to discover perfect properties</p>
+        <a href="#predict-form" class="btn btn-primary btn-lg px-4 py-2">
+            Try Price Predictor Now
+        </a>
+    </div>
+
+    <div id="predict-form" class="container py-5">
+        {% include 'predict.html' %}
+    </div>
+</div>
+{% endblock %}
